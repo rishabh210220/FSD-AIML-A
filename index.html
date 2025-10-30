@@ -1,14 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Book Store</title>
-  </head>
-  <body>
-    <h1 style="text-align: center">Book Store</h1>
-    <div id="root"></div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BOOK APP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #fafafa;
+    }
 
-    <script type="module" src="index.jsx"></script>
-  </body>
+    header, footer {
+      background: #222;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: #f3f3f3;
+      border: 1px solid #000;
+      width: 300px;
+      padding: 12px;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    img {
+      display: block;
+      margin: 0 auto 12px;
+      border-radius: 6px;
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    button {
+      background: #007bff;
+      border: none;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    /* Popup styles */
+    .popup {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #4caf50;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      opacity: 0;
+      animation: fadeInOut 2s forwards;
+      z-index: 1000;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(-10px); }
+      10%, 90% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    function Header() {
+      return (
+        <header>
+          <h1>📚 Welcome to the Book Store 📚</h1>
+        </header>
+      );
+    }
+
+    function Footer() {
+      return (
+        <footer>
+          <p>©️ 2025 Book Store. All rights reserved.</p>
+        </footer>
+      );
+    }
+
+    function Popup({ message }) {
+      return <div className="popup">{message}</div>;
+    }
+
+    function Book({ title, price, image, onAddToCart }) {
+      return (
+        <div className="card">
+          <img src={image} width="250" height="250" alt={title} />
+          <h4>Title: {title}</h4>
+          <h3>Price: ₹{price}/-</h3>
+          <button onClick={() => onAddToCart(title)}>Add to Cart 🛒</button>
+        </div>
+      );
+    }
+
+    function App() {
+      const [popupMessage, setPopupMessage] = React.useState("");
+
+      const books = [
+        { title: "Physics", price: 400, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMKj83FrUFU_vZlDO9Ncx0Opbw649p9EU4Pg&s" },
+        { title: "Mathematics", price: 350, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMKj83FrUFU_vZlDO9Ncx0Opbw649p9EU4Pg&s" },
+        { title: "Chemistry", price: 380, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMKj83FrUFU_vZlDO9Ncx0Opbw649p9EU4Pg&s" }
+      ];
+
+      const handleAddToCart = (bookTitle) => {
+        setPopupMessage(`${bookTitle} added to cart!`);
+        setTimeout(() => setPopupMessage(""), 2000); // Hide after 2s
+      };
+
+      return (
+        <>
+          <Header />
+          <div className="container">
+            {books.map((book, index) => (
+              <Book key={index} {...book} onAddToCart={handleAddToCart} />
+            ))}
+          </div>
+          <Footer />
+          {popupMessage && <Popup message={popupMessage} />}
+        </>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
 </html>
